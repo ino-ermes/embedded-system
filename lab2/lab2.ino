@@ -50,7 +50,7 @@ int myToInt(const String &str, const int &startIndex) {
   if (!valid) return 0;
 
   int endIndex = startIndex - 1;
-  while ('0' <= str.charAt(endIndex + 1) && str.charAt(endIndex + 1) <= '9' && endIndex < len)
+  while ((endIndex + 1) < len && '0' <= str.charAt(endIndex + 1) && str.charAt(endIndex + 1) <= '9')
     ++endIndex;
   int result = 0;
   int scale = 1;

@@ -1,10 +1,14 @@
 #include <LiquidCrystal_I2C.h>
 #include <DHT.h>
 
-//SCL -> A5
-//SDA -> A4
-//DHT -> 2
-//Button -> 3
+/*
+
+SCL     A5
+SDA     A4
+DHT     2
+Button  3
+
+*/
 
 #define DHTPIN 2
 #define DHTTYPE DHT11
@@ -13,13 +17,13 @@
 DHT dht(DHTPIN, DHTTYPE);
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
-bool isFahrenheit = false;           // Biến lưu đơn vị nhiệt độ, false là °C, true là °F
+bool isFahrenheit = false;  // Biến lưu đơn vị nhiệt độ, false là °C, true là °F
 
 void setup() {
   lcd.init();
   lcd.backlight();
   dht.begin();
-  pinMode(BUTTON_PIN, INPUT_PULLUP);  // Cài đặt pin nút nhấn là INPUT_PULLUP
+  pinMode(BUTTON_PIN, INPUT_PULLUP);
   Serial.begin(9600);
 }
 

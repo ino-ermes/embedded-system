@@ -72,7 +72,7 @@ void loop() {
     curMode = INVALID;
   }
 
-  switch(curMode) {
+  switch (curMode) {
     case VALID:
       isLedOn = true;
       break;
@@ -84,7 +84,6 @@ void loop() {
       break;
   }
   digitalWrite(ledPin, isLedOn);
-
 }
 
 bool isValidId(const int* id) {
