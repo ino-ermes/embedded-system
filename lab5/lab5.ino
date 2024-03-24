@@ -43,6 +43,20 @@ void setup() {
 }
 
 void loop() {
+  switch (curMode) {
+    case VALID:
+      isLedOn = true;
+      break;
+    case DOUBLE_VALID:
+      isLedOn = false;
+      break;
+    case INVALID:
+      isLedOn = !isLedOn;
+      break;
+  }
+  digitalWrite(ledPin, isLedOn);
+  delay(100);
+
   // Reset the loop if no new card present on the sensor/reader. This saves the entire process when idle.
   if (!mfrc522.PICC_IsNewCardPresent()) {
     return;
@@ -71,19 +85,6 @@ void loop() {
   } else {
     curMode = INVALID;
   }
-
-  switch (curMode) {
-    case VALID:
-      isLedOn = true;
-      break;
-    case DOUBLE_VALID:
-      isLedOn = false;
-      break;
-    case INVALID:
-      isLedOn = !isLedOn;
-      break;
-  }
-  digitalWrite(ledPin, isLedOn);
 }
 
 bool isValidId(const int* id) {

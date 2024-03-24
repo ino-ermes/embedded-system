@@ -38,6 +38,7 @@ void loop() {
       if (millis() - time > 200) break;
     }
     if (dbClick) {
+      while (digitalRead(BUTTON_PIN)) delay(50);
       lcd.noBacklight();  // Tắt đèn nền LCD
       isFahrenheit = !isFahrenheit;
     }
