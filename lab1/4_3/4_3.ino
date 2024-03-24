@@ -9,14 +9,14 @@ void setup() {
 }
 
 void loop() {
-  for (int j = 0; j < 2; ++j) {
+  for (int j = 1; j >= 0; --j) {
     for (int i = j; i < 10; i += 2) {
       digitalWrite(ledPins[i], HIGH);
       _delay = analogRead(delayPin);
       delay(_delay);
     }
   }
-  for (int j = 0; j < 2; ++j) {
+  for (int j = 1; j >= 0; --j) {
     for (int i = j; i < 10; i += 2) {
       digitalWrite(ledPins[i], LOW);
       _delay = analogRead(delayPin);

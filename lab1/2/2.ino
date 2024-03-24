@@ -15,9 +15,9 @@ void loop() {
     delay(_delay);
   }
   for (int i = 4; i != -1; --i) {
-    digitalWrite(ledPins[i], LOW);
-    delay(_delay);
     digitalWrite(ledPins[9 - i], LOW);
+    delay(_delay);
+    digitalWrite(ledPins[i], LOW);
     delay(_delay);
   }
 }
