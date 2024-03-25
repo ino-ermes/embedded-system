@@ -21,6 +21,7 @@ RtcDS1307<TwoWire> rtc(Wire);
 DHT dht(9, DHT11);
 
 const String fileName = "data.txt";
+const bool overwrite = true;
 
 void setup() {
   Serial.begin(9600);
@@ -38,16 +39,15 @@ void setup() {
       ;
   }
   Serial.println("initialization done.");
+
+  if(overwrite && SD.exists(fileName)) {
+    SD.remove(fileName);
+  }
 }
 
 
-void sdWrite(String content, bool overwrite) {
-  File file;
-  if(overwrite) {
-    file = SD.open(fileName, O_CREAT | O_WRITE);
-  } else {
-    file = SD.open(fileName, O_CREAT | O_WRITE | O_APPEND);
-  }
+void sdWrite(String content) {
+  File file = SD.open(fileName, O_CREAT | O_WRITE | O_APPEND);
   if (file) {
     Serial.println("Writing '" + content + "' into " + fileName);
     file.println(content);
@@ -81,12 +81,12 @@ void loop() {
   // Bai 2
   if (temp != last_temp) {
     RtcDateTime now = rtc.GetDateTime();
-    sdWrite("Temp: " + String(temp) + "°C - Time: " + dateStr(now), false);
+    sdWrite("Temp: " + String(temp) + "°C - Time: " + dateStr(now));
     last_temp = temp;
   }
 
   // Bai 1
   // RtcDateTime now = rtc.GetDateTime();
-  // sdWrite("Temp: " + String(temp) + "°C - Time: " + dateStr(now), false);
+  // sdWrite("Temp: " + String(temp) + "°C - Time: " + dateStr(now));
   // delay(1000);
 }
