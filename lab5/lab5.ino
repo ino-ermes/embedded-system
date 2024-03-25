@@ -66,7 +66,6 @@ void loop() {
   if (!mfrc522.PICC_ReadCardSerial()) {
     return;
   }
-
   int id[4];
   for (int i = 0; i < 4; ++i) {
     id[i] = mfrc522.uid.uidByte[i];
@@ -76,7 +75,7 @@ void loop() {
   Serial.println("");
 
   if (isValidId(id)) {
-    if (curMode == VALID && millis() - singleValidTime < 5000) {
+    if (curMode == VALID && millis() - singleValidTime < 1500) {
       curMode = DOUBLE_VALID;
     } else {
       curMode = VALID;
@@ -85,6 +84,8 @@ void loop() {
   } else {
     curMode = INVALID;
   }
+  mfrc522.PICC_HaltA();       // Tạm dừng module MFRC522
+  mfrc522.PCD_StopCrypto1();  // Dừng tiến trình mã hóa
 }
 
 bool isValidId(const int* id) {

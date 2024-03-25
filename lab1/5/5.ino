@@ -1,12 +1,15 @@
-int ledPins[] = { A0, A1, A2, A3, A4 };
-int brightnessPin = A5;
+int ledPins[] = { 5, 6, 9, 10, 11 };
+int brightnessPin = A5; 
 int brightness = 0;
 
 void setup() {
+  for (int i = 0; i < 5; ++i) {
+    pinMode(ledPins[i], OUTPUT);
+  }
 }
 
 void loop() {
-  brightness = analogRead(brightnessPin);
+  brightness = analogRead(brightnessPin) / 4;
   for (int i = 0; i < 5; ++i) {
     analogWrite(ledPins[i], brightness);
   }

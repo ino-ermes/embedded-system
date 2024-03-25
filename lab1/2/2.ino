@@ -10,14 +10,12 @@ void setup() {
 void loop() {
   for (int i = 0; i != 5; ++i) {
     digitalWrite(ledPins[i], HIGH);
-    delay(_delay);
     digitalWrite(ledPins[9 - i], HIGH);
     delay(_delay);
   }
   for (int i = 4; i != -1; --i) {
-    digitalWrite(ledPins[9 - i], LOW);
-    delay(_delay);
     digitalWrite(ledPins[i], LOW);
+    digitalWrite(ledPins[9 - i], LOW);
     delay(_delay);
   }
 }

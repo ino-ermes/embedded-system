@@ -18,6 +18,7 @@ DHT dht(DHTPIN, DHTTYPE);
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 bool isFahrenheit = false;  // Biến lưu đơn vị nhiệt độ, false là °C, true là °F
+bool isOffScreen = false;
 
 void setup() {
   lcd.init();
@@ -27,19 +28,25 @@ void setup() {
   Serial.begin(9600);
 }
 
+unsigned long long time;
 void loop() {
-  if (digitalRead(BUTTON_PIN)) {
+  if (digitalRead(BUTTON_PIN) == HIGH) {
+    while (digitalRead(BUTTON_PIN) == HIGH) delay(5);
     isFahrenheit = !isFahrenheit;
-    while (digitalRead(BUTTON_PIN)) delay(50);
-    int time = millis();
+    time = millis();
     int dbClick = 0;
-    while (!(dbClick = digitalRead(BUTTON_PIN))) {
-      delay(50);
-      if (millis() - time > 200) break;
+    while ((dbClick = digitalRead(BUTTON_PIN)) != HIGH) {
+      if (millis() - time > 300) break;
     }
     if (dbClick) {
-      while (digitalRead(BUTTON_PIN)) delay(50);
-      lcd.noBacklight();  // Tắt đèn nền LCD
+      if(isOffScreen) {
+        lcd.backlight();
+        lcd.display();
+      } else {
+        lcd.noBacklight();  // Tắt đèn nền LCD
+        lcd.noDisplay();
+      }
+      isOffScreen = !isOffScreen;
       isFahrenheit = !isFahrenheit;
     }
   }
@@ -52,10 +59,11 @@ void loop() {
 
   lcd.clear();
   lcd.setCursor(0, 0);
-  lcd.print("Nhiet do: ");
+  lcd.print("Nhiet do:");
+  lcd.setCursor(0, 1);
   lcd.print(t);
   lcd.print((char)223);
   lcd.print(isFahrenheit ? "F" : "C");  // Hiển thị đơn vị tùy thuộc vào giá trị của isFahrenheit
 
-  delay(50);
+  delay(100);
 }
