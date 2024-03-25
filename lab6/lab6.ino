@@ -40,8 +40,18 @@ void setup() {
   }
   Serial.println("initialization done.");
 
-  if(overwrite && SD.exists(fileName)) {
-    SD.remove(fileName);
+  // if(overwrite && SD.exists(fileName)) {
+  //   SD.remove(fileName);
+  // }
+
+  if (overwrite && SD.exists(fileName)) {
+    File file = SD.open(fileName, O_WRITE | O_TRUNC);  // Open file for writing and truncate its content
+    if (file) {
+      file.close();  // Close file to remove its content
+      Serial.println("Content of " + fileName + " removed.");
+    } else {
+      Serial.println("error opening " + fileName);
+    }
   }
 }
 
