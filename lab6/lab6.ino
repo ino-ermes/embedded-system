@@ -1,6 +1,6 @@
 // SD CARD READER
-// MOSI: pin 11
 // MISO: pin 12
+// MOSI: pin 11
 // SCK: pin 13
 // CS: pin 10
 
@@ -22,6 +22,7 @@ DHT dht(9, DHT11);
 
 const String fileName = "data.txt";
 const bool overwrite = true;
+float lastTemp = -1;
 
 void setup() {
   Serial.begin(9600);
@@ -48,10 +49,13 @@ void setup() {
     File file = SD.open(fileName, O_WRITE | O_TRUNC);  // Open file for writing and truncate its content
     if (file) {
       file.close();  // Close file to remove its content
-      Serial.println("Content of " + fileName + " removed.");
+      // Serial.println("Content of " + fileName + " removed.");
     } else {
       Serial.println("error opening " + fileName);
     }
+  } else {
+    lastTemp = getLastTemperature();
+    Serial.println(lastTemp);
   }
 }
 
@@ -83,20 +87,58 @@ String dateStr(RtcDateTime dt) {
   return datestring;
 }
 
-float last_temp = -1;
+float getLastTemperature() {
+  File file = SD.open(fileName);
+  if (file) {
+    // Seek to the end of the file
+    unsigned long fileSize = file.size();
+    if(fileSize < 1) return -1;
+    unsigned long seekPos = fileSize - 2;
+
+    file.seek(seekPos);
+
+    // Find the start of the last line
+    while (seekPos > 0 && file.read() != '\n') {
+      seekPos--;
+      file.seek(seekPos);
+    }
+
+    // Read the last line
+    String lastLine = file.readString();
+    file.close();
+
+    // Extract temperature from the last line
+    int tempIndex = lastLine.indexOf("Temp: ");
+    if (tempIndex != -1) {
+      int tempEndIndex = lastLine.indexOf("°C", tempIndex);
+      if (tempEndIndex != -1) {
+        String tempStr = lastLine.substring(tempIndex + 6, tempEndIndex);
+        return tempStr.toFloat();
+      }
+    }
+  } else {
+    Serial.println("Error opening " + fileName);
+  }
+
+  // If something went wrong, return a default value
+  return -1;
+}
 
 void loop() {
   float temp = dht.readTemperature();
-
-  // Bai 2
-  if (temp != last_temp) {
-    RtcDateTime now = rtc.GetDateTime();
-    sdWrite("Temp: " + String(temp) + "°C - Time: " + dateStr(now));
-    last_temp = temp;
+  if(isnan(temp)) {
+    Serial.println("temp is nan");
   }
 
+  // Bai 2
+  // if (fabs(temp - lastTemp) > 0.01) {
+  //   RtcDateTime now = rtc.GetDateTime();
+  //   sdWrite("Temp: " + String(temp, 2) + "°C - Time: " + dateStr(now));
+  //   lastTemp = temp;
+  // }
+
   // Bai 1
-  // RtcDateTime now = rtc.GetDateTime();
-  // sdWrite("Temp: " + String(temp) + "°C - Time: " + dateStr(now));
-  // delay(1000);
+  RtcDateTime now = rtc.GetDateTime();
+  sdWrite("Temp: " + String(temp) + "°C - Time: " + dateStr(now));
+  delay(1000);
 }

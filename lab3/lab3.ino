@@ -53,6 +53,7 @@ void loop() {
 
   float t = dht.readTemperature(isFahrenheit);  // Đọc nhiệt độ theo đơn vị hiện tại
   if (isnan(t)) {
+    lcd.clear();
     lcd.print("Error");  // Nếu không đọc được nhiệt độ, hiển thị lỗi
     return;
   }
