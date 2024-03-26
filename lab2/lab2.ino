@@ -32,9 +32,15 @@ void loop() {
 
     if (tIndex != -1) {
       delay(timeValue * 1000);
-      analogWrite(ledPinRed, 0);
-      analogWrite(ledPinGreen, 0);
-      analogWrite(ledPinBlue, 0);
+      if (rIndex == -1 && gIndex == -1 && bIndex == -1) {
+        analogWrite(ledPinRed, 0);
+        analogWrite(ledPinGreen, 0);
+        analogWrite(ledPinBlue, 0);
+      } else {
+        if (rIndex != -1) analogWrite(ledPinRed, 0);
+        if (gIndex != -1) analogWrite(ledPinGreen, 0);
+        if (bIndex != -1) analogWrite(ledPinBlue, 0);
+      }
     }
   }
 }
